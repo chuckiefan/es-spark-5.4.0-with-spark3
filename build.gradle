@@ -505,17 +505,19 @@ def nestMRProject(target) {
 
 // reusable method to nest Map/Reduce module in the rest of the projects to make them usable stand-alone
 def baseSparkProject(target, sparkVersion) {
-    def scalaVer = project.hasProperty("scala") ? project.getProperty("scala") : "210"
+    def scalaVer = project.hasProperty("scala") ? project.getProperty("scala") : "212"
 
     switch (scalaVer) {
         case "211":
             ext.scalaVersion = scala211Version
             ext.scalaMajorVersion = scala211MajorVersion
             break;
-
+        case "212":
+            ext.scalaVersion = scala212Version
+            ext.scalaMajorVersion = scala212MajorVersion
         default:
-            ext.scalaVersion = scala210Version
-            ext.scalaMajorVersion = scala210MajorVersion
+            ext.scalaVersion = scala212Version
+            ext.scalaMajorVersion = scala212MajorVersion
     }
 
     target.archivesBaseName += "_$scalaMajorVersion"
@@ -545,12 +547,12 @@ def baseSparkProject(target, sparkVersion) {
     println "Spark $sparkVersion compiled using Scala $scalaMajorVersion [$scalaVersion]"
 
     // when using Scala 2.11 use a different folder to cache the artifacts between builds
-    if (scalaVer == "211") {
+    if (scalaVer == "212") {
         target.sourceSets.each {
-            it.output.classesDir = file(it.output.classesDir.absolutePath.replaceAll("classes", "classes.211"))
+            it.output.classesDir = file(it.output.classesDir.absolutePath.replaceAll("classes", "classes.212"))
         }
         target.javadoc {
-            destinationDir = file("$project.docsDir/javadoc-211")
+            destinationDir = file("$project.docsDir/javadoc-212")
         }
         target.integrationTest {
             // update test target
@@ -625,48 +627,48 @@ def baseSparkProject(target, sparkVersion) {
     }
 }
 
-project(":elasticsearch-spark-13") {
-    description = "Elasticsearch Spark (for Spark 1.3-1.6)"
+//project(":elasticsearch-spark-13") {
+//    description = "Elasticsearch Spark (for Spark 1.3-1.6)"
+//
+//    baseSparkProject(project, spark13Version)
+//
+//    dependencies {
+//        optional("org.apache.spark:spark-streaming_$scalaMajorVersion:$spark13Version") {
+//            exclude group: 'org.apache.hadoop'
+//        }
+//
+//        itestCompile("org.apache.spark:spark-streaming_$scalaMajorVersion:$spark13Version") {
+//            exclude group: 'org.apache.hadoop'
+//        }
+//    }
+//
+//    // deal with the messy conflicts out there
+//    configurations.all {
+//        resolutionStrategy {
+//            eachDependency { details ->
+//                // in a similar vein, change all javax.servlet artifacts to the one used by Spark
+//                // otherwise these will lead to SecurityException (signer information wrong)
+//                if (details.requested.name.contains("servlet") && !details.requested.name.contains("guice")) {
+//                    details.useTarget group: "org.eclipse.jetty.orbit", name: "javax.servlet", version: "3.0.0.v201112011016"
+//                }
+//            }
+//        }
+//
+//        exclude group: "org.mortbay.jetty"
+//    }
+//}
 
-    baseSparkProject(project, spark13Version)
+project(":elasticsearch-spark-30") {
+    description = "Elasticsearch Spark (for Spark 3.0)"
+
+    baseSparkProject(project, spark30Version)
 
     dependencies {
-        optional("org.apache.spark:spark-streaming_$scalaMajorVersion:$spark13Version") {
+        optional("org.apache.spark:spark-streaming_$scalaMajorVersion:$spark30Version") {
             exclude group: 'org.apache.hadoop'
         }
 
-        itestCompile("org.apache.spark:spark-streaming_$scalaMajorVersion:$spark13Version") {
-            exclude group: 'org.apache.hadoop'
-        }
-    }
-
-    // deal with the messy conflicts out there
-    configurations.all {
-        resolutionStrategy {
-            eachDependency { details ->
-                // in a similar vein, change all javax.servlet artifacts to the one used by Spark
-                // otherwise these will lead to SecurityException (signer information wrong)
-                if (details.requested.name.contains("servlet") && !details.requested.name.contains("guice")) {
-                    details.useTarget group: "org.eclipse.jetty.orbit", name: "javax.servlet", version: "3.0.0.v201112011016"
-                }
-            }
-        }
-
-        exclude group: "org.mortbay.jetty"
-    }
-}
-
-project(":elasticsearch-spark-20") {
-    description = "Elasticsearch Spark (for Spark 2.0)"
-
-    baseSparkProject(project, spark20Version)
-
-    dependencies {
-        optional("org.apache.spark:spark-streaming_$scalaMajorVersion:$spark20Version") {
-            exclude group: 'org.apache.hadoop'
-        }
-
-        itestCompile("org.apache.spark:spark-streaming_$scalaMajorVersion:$spark20Version") {
+        itestCompile("org.apache.spark:spark-streaming_$scalaMajorVersion:$spark30Version") {
             exclude group: 'org.apache.hadoop'
         }
     }
@@ -695,7 +697,8 @@ configure(rootProject) {
     description = "Elasticsearch Hadoop"
 
     // include Spark 2.0 support in main jar
-    def eshModules = subprojects - project(":elasticsearch-spark-13")
+    def eshModules = subprojects
+//    def eshModules = subprojects - project(":elasticsearch-spark-13")
 
     // build root project dependencies
     // extract optional and provided dependencies
