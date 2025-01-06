@@ -39,6 +39,7 @@ public class GetAliasesRequestBuilder extends RequestBuilder<GetAliasesRequestBu
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Response execute() {
         StringBuilder path = new StringBuilder();

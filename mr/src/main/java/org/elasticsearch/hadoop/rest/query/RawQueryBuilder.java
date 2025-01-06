@@ -54,6 +54,7 @@ public class RawQueryBuilder extends QueryBuilder {
      *                a filter (only relevant for elasticsearch version prior to 2.x).
      * @throws IOException if the JSON string is not valid
      */
+    @SuppressWarnings("unchecked")
     public RawQueryBuilder(String value, boolean isQuery) throws IOException {
         this((Map<String, Object>) MAPPER.readValue(value, HashMap.class), isQuery);
     }

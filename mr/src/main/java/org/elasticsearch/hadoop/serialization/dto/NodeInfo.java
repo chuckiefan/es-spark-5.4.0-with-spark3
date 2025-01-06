@@ -39,6 +39,7 @@ public class NodeInfo implements Serializable {
     private final boolean isData;
     private final boolean isIngest;
 
+    @SuppressWarnings("unchecked")
     public NodeInfo(String id, Map<String, Object> map) {
         this.id = id;
         EsMajorVersion version = EsMajorVersion.parse((String) map.get("version"));

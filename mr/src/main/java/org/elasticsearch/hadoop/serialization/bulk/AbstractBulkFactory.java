@@ -110,6 +110,7 @@ public abstract class AbstractBulkFactory implements BulkFactory {
             return pool;
         }
 
+        @SuppressWarnings("unchecked")
         void doWrite(Object value) {
             // common-case - constants or JDK types
             if (value instanceof String || jsonInput || value instanceof Number || value instanceof Boolean || value == null) {
