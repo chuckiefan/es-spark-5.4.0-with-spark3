@@ -162,6 +162,7 @@ public class Field implements Serializable {
     }
 
 
+    @SuppressWarnings("unchecked")
     private static boolean isFieldNamedProperties(Object fieldValue){
         if(fieldValue instanceof Map){
             Map<String,Object> fieldValueAsMap = ((Map<String, Object>)fieldValue);

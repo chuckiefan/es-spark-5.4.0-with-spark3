@@ -46,6 +46,7 @@ public class MultiOutputFormat extends OutputFormat implements org.apache.hadoop
             this.writers = writers;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void write(Object key, Object value) throws IOException, InterruptedException {
             for (RecordWriter writer : writers) {
@@ -77,6 +78,7 @@ public class MultiOutputFormat extends OutputFormat implements org.apache.hadoop
         }
 
 
+        @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public void write(Object key, Object value) throws IOException {
             for (org.apache.hadoop.mapred.RecordWriter writer : writers) {
@@ -254,6 +256,7 @@ public class MultiOutputFormat extends OutputFormat implements org.apache.hadoop
         return new MultiNewOutputCommitter(committers);
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static void addOutputFormat(Configuration cfg, Class<? extends OutputFormat>... formats) {
         Collection<String> of = cfg.getStringCollection(CFG_FIELD);
         for (Class<? extends OutputFormat> format : formats) {
