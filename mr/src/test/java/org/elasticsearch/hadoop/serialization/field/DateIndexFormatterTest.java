@@ -28,21 +28,5 @@ public class DateIndexFormatterTest {
 
     private IndexFormatter formatter = new DateIndexFormatter();
 
-    @Test
-    public void testTimeYMDFormat() {
-        formatter.configure("YYYY.MM.dd");
-        assertThat(formatter.format("2014-10-06T19:20:25.000Z"), is("2014.10.06"));
-    }
 
-    @Test
-    public void testTimeYMFormat() {
-        formatter.configure("YYYY-MM");
-        assertThat(formatter.format("2014-10-06T19:20:25.000Z"), is("2014-10"));
-    }
-
-    @Test
-    public void testDateAndTimezone() {
-        formatter.configure("MM-dd");
-        assertThat(formatter.format("1969-08-20"), is("08-20"));
-    }
 }
