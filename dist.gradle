@@ -1,16 +1,6 @@
 apply plugin: "maven"
 apply plugin: "propdeps-maven"
 
-ext.enableArtifactSigning = !version.endsWith("SNAPSHOT") && !project.hasProperty("skip.signing")
-
-if (enableArtifactSigning) {
-  apply plugin: 'signing'
-
-  signing {
-    sign configurations.archives
-  }
-}
-
 
 def customizePom(pom, gradleProject) {
     pom.whenConfigured { generatedPom ->
@@ -104,9 +94,6 @@ uploadArchives {
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
                 authentication(userName: deployUsername(), password: deployPassword())
             }
-            if (enableArtifactSigning) {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-            }
         }
     }
 }
@@ -114,9 +101,6 @@ uploadArchives {
 install {
     repositories.mavenInstaller {
         customizePom(pom, project)
-        if (enableArtifactSigning) {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-        }
     }
 }
 
