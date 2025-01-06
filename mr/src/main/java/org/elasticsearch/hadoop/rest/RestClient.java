@@ -365,6 +365,7 @@ public class RestClient implements Closeable, StatsAware {
         return (Map<String, Object>) get(query, null);
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, Object> sampleForFields(String indexAndType, Collection<String> fields) {
         if (fields == null || fields.isEmpty()) {
             return Collections.emptyMap();
@@ -612,7 +613,7 @@ public class RestClient implements Closeable, StatsAware {
     }
 
     public boolean isAlias(String query) {
-        Map<String, Object> aliases = (Map<String, Object>) get(query, null);
+        Map<String, Object> aliases = get(query, null);
         return (aliases.size() > 1);
     }
 

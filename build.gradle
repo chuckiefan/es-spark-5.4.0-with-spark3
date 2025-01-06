@@ -402,24 +402,11 @@ project(":elasticsearch-hadoop-mr") {
 
     sourceSets {
         main {
-            output.dir(generatedResources, builtBy: "generateGitHash")
+            output.dir(generatedResources)
         }
     }
 
-    task generateGitHash {
-        inputs.file gitBranch()
-        outputs.file generatedResources
 
-        doLast {
-            Properties props = new Properties()
-            props.put("version", version)
-            props.put("hash", gitHash())
-            File output = new File(generatedResources, "esh-build.properties")
-            new File(generatedResources).mkdirs()
-            output.createNewFile()
-            props.store(output.newWriter(), null)
-        }
-    }
 
     eclipse.classpath.file {
         whenMerged { cp ->
@@ -453,7 +440,7 @@ def nestMRProject(target) {
     target.jar {
         from(zipTree(project(":elasticsearch-hadoop-mr").jar.archivePath)) {
             include "org/elasticsearch/hadoop/**"
-            include "esh-build.properties"
+//            include "esh-build.properties"
         }
     }
 
