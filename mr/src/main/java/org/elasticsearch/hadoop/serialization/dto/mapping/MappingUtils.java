@@ -237,6 +237,7 @@ public abstract class MappingUtils {
         return GeoPointType.LAT_LON_OBJECT;
     }
 
+    @SuppressWarnings("unchecked")
     private static GeoField doParseGeoShapeInfo(Object parsedContent) {
         if (parsedContent instanceof Map) {
             Map<String, Object> geoShape = (Map<String, Object>) parsedContent;
