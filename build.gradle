@@ -381,62 +381,62 @@ configure(rootProject) {
 }
 
 
-//project(":elasticsearch-hadoop-mr") {
-//    description = "Elasticsearch Hadoop Map/Reduce"
-//
-//    dependencies {
-//        provided(hadoopClient)
-//        provided("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion")
-//
-//        // Testing
-//        if (hadoopVersion.contains("1.0.")) {
-//            // missing dependency in Hadoop 1.0.3/1.0.4
-//            testCompile "commons-io:commons-io:2.1"
-//        }
-//
-//        testCompile "io.netty:netty-all:4.0.29.Final"
-//        testCompile "org.elasticsearch:securemock:1.2"
-//    }
-//
-//    def generatedResources = "$buildDir/generated-resources/main"
-//
-//    sourceSets {
-//        main {
-//            output.dir(generatedResources, builtBy: "generateGitHash")
-//        }
-//    }
-//
-//    task generateGitHash {
-//        inputs.file gitBranch()
-//        outputs.file generatedResources
-//
-//        doLast {
-//            Properties props = new Properties()
-//            props.put("version", version)
-//            props.put("hash", gitHash())
-//            File output = new File(generatedResources, "esh-build.properties")
-//            new File(generatedResources).mkdirs()
-//            output.createNewFile()
-//            props.store(output.newWriter(), null)
-//        }
-//    }
-//
-//    eclipse.classpath.file {
-//        whenMerged { cp ->
-//            // export all jars (to be used upstream by dependent projects)  <-- for some reason Gradle removes all jars
-//            cp.entries.each { entry ->
-//                if (entry.hasProperty("exported"))
-//                    entry.exported = true
-//            }
-//        }
-//    }
-//
-//    artifacts {
-//        s3 javadocJar
-//        s3 sourcesJar
-//        s3 jar
-//    }
-//}
+project(":elasticsearch-hadoop-mr") {
+    description = "Elasticsearch Hadoop Map/Reduce"
+
+    dependencies {
+        provided(hadoopClient)
+        provided("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion")
+
+        // Testing
+        if (hadoopVersion.contains("1.0.")) {
+            // missing dependency in Hadoop 1.0.3/1.0.4
+            testCompile "commons-io:commons-io:2.1"
+        }
+
+        testCompile "io.netty:netty-all:4.0.29.Final"
+        testCompile "org.elasticsearch:securemock:1.2"
+    }
+
+    def generatedResources = "$buildDir/generated-resources/main"
+
+    sourceSets {
+        main {
+            output.dir(generatedResources, builtBy: "generateGitHash")
+        }
+    }
+
+    task generateGitHash {
+        inputs.file gitBranch()
+        outputs.file generatedResources
+
+        doLast {
+            Properties props = new Properties()
+            props.put("version", version)
+            props.put("hash", gitHash())
+            File output = new File(generatedResources, "esh-build.properties")
+            new File(generatedResources).mkdirs()
+            output.createNewFile()
+            props.store(output.newWriter(), null)
+        }
+    }
+
+    eclipse.classpath.file {
+        whenMerged { cp ->
+            // export all jars (to be used upstream by dependent projects)  <-- for some reason Gradle removes all jars
+            cp.entries.each { entry ->
+                if (entry.hasProperty("exported"))
+                    entry.exported = true
+            }
+        }
+    }
+
+    artifacts {
+        s3 javadocJar
+        s3 sourcesJar
+        s3 jar
+    }
+}
 
 // reusable method to nest Map/Reduce module in the rest of the projects to make them usable stand-alone
 def nestMRProject(target) {
